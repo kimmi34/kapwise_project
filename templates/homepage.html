@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>django + mysql</title>
+{% endblock %}
+
+{% block body %}
+
+
+<script>
+    function showDiv() {
+        document.getElementById('ShowShortcode').style.display = "block";
+    }
+    function fetchdatafromapi() {
+        fetch('http://127.0.0.1:8000/core/get10usersfromapi/')
+        .then(response => 
+            response.json()
+        )
+        .then(data => {
+            console.log(data)
+            window.alert(JSON.stringify(data,undefined,'    '))
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+       
+    }
+
+    function viewallallusers() {
+        fetch('http://127.0.0.1:8000/core/viewallusers/')
+        .then(response => 
+            response.json()
+        )
+        .then(data => {
+            console.log(data)
+            window.alert(JSON.stringify(data,undefined,'    '))
+        })
+        .catch(err => {
+            console.log(err.response)
+        })   
+    }
+
+    function getgivenuser() {
+        var get_user_id = document.getElementById("get_user_id").value
+        fetch('http://127.0.0.1:8000/core/getgivenuser/'+get_user_id+'/')
+        .then(response => 
+            response.json()
+        )
+        .then(data => {
+            console.log(data)
+            window.alert(JSON.stringify(data,undefined,'    '))
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+       
+    }
+
+    function deletegivenuser() {
+        let csrftoken = getCookie('csrftoken');
+        del_user_id = document.getElementById("del_user_id",{}).value
+        fetch('http://127.0.0.1:8000/core/deletegivenuser/'+del_user_id+'/',{
+            method:'DELETE',
+            headers: { 
+                "Content-type": "application/json; charset=UTF-8",
+                "X-CSRFToken": csrftoken,
+        }})
+        .then(response => 
+            response.json()
+        )
+        .then(data => {
+            console.log(data)
+            window.alert(JSON.stringify(data,undefined,'    '))
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+       
+    }
+
+    function deleteallusers() {
+        let csrftoken = getCookie('csrftoken');
+        fetch('http://127.0.0.1:8000/core/deleteallusers/',{
+            method:"DELETE",
+            headers: { 
+                "Content-type": "application/json; charset=UTF-8",
+                "X-CSRFToken": csrftoken,
+        }})
+        .then(response => 
+            response.json()
+        )
+        .then(data => {
+            window.alert('All users deleted')
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+       
+    }
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function postuser() {
+        let csrftoken = getCookie('csrftoken');
+        fetch("http://127.0.0.1:8000/core/postuser/", { 
+        method: "POST", 
+        body: JSON.stringify({ 
+            name:document.getElementById("name").value,
+            username:document.getElementById("username").value,
+            email : document.getElementById("email").value,
+            phone:document.getElementById("phone").value,
+            website : document.getElementById("website").value,
+            address: {
+                street: document.getElementById("street").value,
+                zipcode:document.getElementById("zipcode").value,
+                suite: document.getElementById("suite").value,
+                city: document.getElementById("city").value,
+                geo: {
+                    lat:  document.getElementById("lat").value,
+                    lng: document.getElementById("lng").value
+                }
+            },
+            company: {
+                name:  document.getElementById("comp_name").value,
+                catchPhrase:  document.getElementById("catchPhrase").value,
+                bs: document.getElementById("bs").value,
+            }
+        }),
+        headers: { 
+            "Content-type": "application/json; charset=UTF-8",
+            "X-CSRFToken": csrftoken,
+        } 
+        }) 
+            
+        .then(response => response.json()) 
+
+        .then(json => console.log(json)); 
+        window.alert('User added')
+            }
+
+
+</script>
+
+<div class="px-5 py-5">
+    <h3 class="text-align center"><b>django + mysql application with 5 apis</b></h3>
+    <br>
+    <br>
+    <h5>Fetch data from given api (https://jsonplaceholder.typicode.com /) of 10 users and add it to mysql datbase</h5>
+    <button onClick="fetchdatafromapi()" type="button" class="btn btn-outline-primary btn-sm"">Fetch</button>
+    <br /> <br />
+    <br>
+    <h5>View all the users in the database</h5>
+    <button onClick = "viewallallusers()" type="button" class="btn btn-outline-primary btn-sm">View</button> <br />
+    <br>
+    <br>
+    <h5>View User with a given id</h5>
+    <h6>Enter the user id: </h6><input id="get_user_id" /> 
+    <button onClick = "getgivenuser()" type="button" class="btn btn-outline-primary btn-sm">View</button> <br />
+    <br>
+    <br>
+    <h5>Delete User with a given id</h5>
+    <h6>Enter the user id: </h6><input id="del_user_id" /> 
+    <button onClick = "deletegivenuser()" type="button" class="btn btn-outline-primary btn-sm">Delete</button> <br />
+    <br>
+    <br>
+    <h5>Delete all users</h5>
+    <button onClick = "deleteallusers()" type="button" class="btn btn-outline-primary btn-sm">Delete</button> <br />
+    <br>
+    <br>
+    <h5><b>POST : Add a new user</b> <br /></h5>
+    <br>
+    Name:
+    <input id="name" />
+    Username:
+    <input id="username" />
+    Email:
+    <input id="email" />
+    Phone:
+    <input id="phone" />
+    Website:
+    <input id="website" />
+    Address:
+    Street:
+    <input id="street" />
+    Suite:
+    <input id="suite" />
+    City:
+    <input id="city" />
+    Zipcode:
+    <input id="zipcode" />
+    Latitude:
+    <input id="lat" />
+    Longitude:
+    <input id="lng" />
+    Company name:
+    <input id="comp_name" />
+    Company Catch phrase:
+    <input id="catchPhrase" />
+    Company bs:
+    <input id="bs" />
+    <br>
+    <br>
+    <center>
+    <button onClick="postuser()" type="button" class="btn btn-outline-success">Submit</button>
+    </center>
+</div>
+
+
+{% endblock %}
