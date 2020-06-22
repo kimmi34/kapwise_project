@@ -1,6 +1,6 @@
 Clone the project to your system
 
-git clone 
+git clone https://github.com/kimmi34/kapwise_project
 
 Required Installations
 
