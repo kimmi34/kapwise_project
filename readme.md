@@ -18,34 +18,38 @@ Run following commands for the same if it is not installed yet:
 
 In order to use MySQL with our django project,a Python 3 database connector library compatible with Django, is required. So, next we will install the database connector, mysqlclient.
 
-sudo apt install python3-dev 
+    sudo apt install python3-dev 
 
-sudo apt install python3-dev libmysqlclient-dev default-libmysqlclient-dev
+    sudo apt install python3-dev libmysqlclient-dev default-libmysqlclient-dev
 
-pip install mysqlclient
+    pip install mysqlclient
 
 Next, we will create a database in MySQL which will be used by django.
 
 
-sudo mysql -u root
-CREATE DATABASE kapwise_database;
+    sudo mysql -u root
+
+    CREATE DATABASE kapwise_database;
 
 
 Now , we will create our account, set a password, and grant access to the database we created.
 
-CREATE USER 'kapwise'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
-GRANT ALL ON kapwise_database.* TO 'kapwise'@'%';
-FLUSH PRIVILEGES;
+    CREATE USER 'kapwise'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
+    
+    GRANT ALL ON kapwise_database.* TO 'kapwise'@'%';
+
+    FLUSH PRIVILEGES;
 
 
 3. Finally exit MySQL and run migrations in django project.
 
-python manage.py makemigrations
-python manage.py migrate
+    python manage.py makemigrations
+    
+    python manage.py migrate
 
 4. Run the server
 
-python manage.py runserver
+    python manage.py runserver
 
 
 Display and APIs
